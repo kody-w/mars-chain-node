@@ -1,1 +1,20 @@
-{"consensus":false,"peers_checked":0}
+{
+  "timestamp": "2026-04-01T07:22:39.601029Z",
+  "my_head": null,
+  "peers_checked": 2,
+  "peers_matching": 1,
+  "consensus": false,
+  "results": [
+    {
+      "node": "node-1-kody",
+      "chain_head": null,
+      "match": true,
+      "circulating": 0,
+      "verified": 0
+    },
+    {
+      "node": "node-1-kody",
+      "error": "'NoneType' object is not subscriptable"
+    }
+  ]
+}
