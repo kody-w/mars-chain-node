@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "node-1-kody",
+      "owner": "kody-w",
+      "repo": "mars-chain-node",
+      "url": "https://kody-w.github.io/mars-chain-node/",
+      "api": "https://raw.githubusercontent.com/kody-w/mars-chain-node/main/docs/api/",
+      "added": "2025-07-09T00:00:00Z",
+      "status": "active"
+    }
+  ],
+  "consensus_threshold": 0.67,
+  "cross_verify_interval_hours": 6
+}

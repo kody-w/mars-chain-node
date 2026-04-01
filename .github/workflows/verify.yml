@@ -1,0 +1,39 @@
+name: Verify Submissions
+
+on:
+  push:
+    paths: ['submissions/*.json']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify cartridge submissions
+        run: python3 verify.py
+
+      - name: Commit verification results
+        run: |
+          git config user.name "MARS Chain Verifier"
+          git config user.email "verifier@mars-chain.local"
+          git add chain/ docs/api/
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            VERIFIED=$(cat chain/state.json | python3 -c "import sys,json;print(json.load(sys.stdin)['total_verified'])")
+            git commit -m "verify: ${VERIFIED} total verified runs
+
+            Chain head: $(cat chain/state.json | python3 -c "import sys,json;print(json.load(sys.stdin).get('chain_head','genesis')[:12])")
+            MARS circulating: $(cat chain/state.json | python3 -c "import sys,json;print(json.load(sys.stdin).get('mars_circulating',0))")"
+            git push
+          fi

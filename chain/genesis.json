@@ -1,0 +1,24 @@
+{
+  "network": "mars-barn",
+  "version": 1,
+  "token": {
+    "name": "MARS",
+    "symbol": "MARS",
+    "total_supply": 21000000,
+    "decimals": 0,
+    "halving_interval_sols": 500
+  },
+  "genesis": {
+    "timestamp": "2025-07-09T00:00:00Z",
+    "message": "The sim is just the vehicle. The patterns are the roads.",
+    "frame_ledger": "https://github.com/kody-w/mars-barn-opus/tree/main/data/frames",
+    "hash": "00000000"
+  },
+  "rules": {
+    "verification": "deterministic_replay",
+    "consensus": "2_of_3_nodes",
+    "frame_source": "public_ledger_only",
+    "token_program": "lispy_default_or_custom",
+    "chain_type": "hash_linked_per_sol"
+  }
+}

@@ -1,0 +1,73 @@
+name: Cross-Verify Peers
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cross-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Cross-verify peer chain states
+        run: |
+          python3 -c "
+          import json, urllib.request
+
+          peers = json.load(open('chain/peers.json'))
+          state = json.load(open('chain/state.json'))
+          my_head = state.get('chain_head')
+
+          results = []
+          for node in peers.get('nodes', []):
+              try:
+                  url = node['api'] + 'state.json'
+                  resp = urllib.request.urlopen(url, timeout=10)
+                  peer_state = json.loads(resp.read())
+                  match = peer_state.get('chain_head') == my_head
+                  results.append({
+                      'node': node['id'],
+                      'chain_head': peer_state.get('chain_head'),
+                      'match': match,
+                      'circulating': peer_state.get('mars_circulating', 0),
+                      'verified': peer_state.get('total_verified', 0)
+                  })
+                  print(f\"{'✓' if match else '✗'} {node['id']}: head={peer_state.get('chain_head','?')[:12]} {'MATCH' if match else 'DIVERGED'}\")
+              except Exception as e:
+                  results.append({'node': node['id'], 'error': str(e)})
+                  print(f'⚠ {node[\"id\"]}: {e}')
+
+          # Save cross-verification results
+          import datetime
+          report = {
+              'timestamp': datetime.datetime.utcnow().isoformat() + 'Z',
+              'my_head': my_head,
+              'peers_checked': len(results),
+              'peers_matching': sum(1 for r in results if r.get('match')),
+              'consensus': sum(1 for r in results if r.get('match')) / max(1, len(results)) >= 0.67,
+              'results': results
+          }
+          json.dump(report, open('docs/api/consensus.json','w'), indent=2)
+          print(f\"\nConsensus: {report['peers_matching']}/{report['peers_checked']} nodes agree\")
+          "
+
+      - name: Commit consensus report
+        run: |
+          git config user.name "MARS Chain Verifier"
+          git config user.email "verifier@mars-chain.local"
+          git add docs/api/consensus.json
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "consensus: cross-verification report"
+            git push
+          fi

@@ -1,0 +1,12 @@
+{
+  "chain_head": null,
+  "chain_length": 0,
+  "total_verified": 0,
+  "total_rejected": 0,
+  "mars_circulating": 0,
+  "mars_supply_pct": "0.000000",
+  "last_verification": null,
+  "node_id": "node-genesis",
+  "node_url": "https://kody-w.github.io/mars-chain-node/",
+  "updated": "2025-07-09T00:00:00Z"
+}
