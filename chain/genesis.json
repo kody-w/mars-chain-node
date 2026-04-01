@@ -1,6 +1,6 @@
 {
   "network": "mars-barn",
-  "version": 1,
+  "version": 2,
   "token": {
     "name": "MARS",
     "symbol": "MARS",
@@ -12,13 +12,29 @@
     "timestamp": "2025-07-09T00:00:00Z",
     "message": "The sim is just the vehicle. The patterns are the roads.",
     "frame_ledger": "https://github.com/kody-w/mars-barn-opus/tree/main/data/frames",
+    "engine_manifest": "https://raw.githubusercontent.com/kody-w/mars-barn-opus/main/data/engine-manifest.json",
     "hash": "00000000"
+  },
+  "authority": {
+    "owner": "Wildhaven Homes LLC",
+    "engine": "Rappter Engine",
+    "public_key_id": "wildhaven-rappter-v1",
+    "authorized_engines": [
+      {
+        "id": "rappter-genesis",
+        "owner": "Wildhaven Homes LLC",
+        "description": "The genesis Rappter engine. Private key on local hardware. Produces signed frames.",
+        "registered": "2025-07-09T00:00:00Z"
+      }
+    ],
+    "description": "Only frames signed by an authorized engine are valid. The engine's private key never leaves the hardware. The public key is registered here for verification. This is how Wildhaven Homes LLC maintains authenticity control over the chain while keeping the engine IP private."
   },
   "rules": {
     "verification": "deterministic_replay",
     "consensus": "2_of_3_nodes",
-    "frame_source": "public_ledger_only",
+    "frame_source": "signed_by_authorized_engine",
     "token_program": "lispy_default_or_custom",
-    "chain_type": "hash_linked_per_sol"
+    "chain_type": "hash_linked_per_sol",
+    "frame_signing": "Frames must include _engineId and _signature fields. Nodes verify signature against registered public key before accepting frame into the chain."
   }
 }
