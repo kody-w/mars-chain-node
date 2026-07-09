@@ -1,20 +1,13 @@
 {
-  "timestamp": "2026-07-08T19:25:30.991270Z",
+  "timestamp": "2026-07-09T03:20:39.100870Z",
   "my_head": null,
-  "peers_checked": 2,
-  "peers_matching": 1,
+  "peers_checked": 1,
+  "peers_matching": 0,
   "consensus": false,
   "results": [
     {
       "node": "node-1-kody",
-      "chain_head": null,
-      "match": true,
-      "circulating": 0,
-      "verified": 0
-    },
-    {
-      "node": "node-1-kody",
-      "error": "'NoneType' object is not subscriptable"
+      "error": "HTTP Error 429: Too Many Requests"
     }
   ]
 }
